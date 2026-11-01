@@ -1996,7 +1996,7 @@ async function initAccounts(){
     updateAuthUI();return;
   }
   db=window.supabase.createClient(url,key,{
-    auth:{persistSession:true,storage:window.sessionStorage,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}
+    auth:{persistSession:true,storage:window.localStorage,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}
   });
   // Keep callback synchronous; never await database calls inside the auth callback.
   db.auth.onAuthStateChange((event,session)=>{
