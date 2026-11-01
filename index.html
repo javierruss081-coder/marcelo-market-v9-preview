@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-r3MxqQ9QTxuKfJToSKeYPI6cwp8ONSQnOO1SvzUAhnA='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-KO3yIQNXQ9iXZnrt2q2AptAN/fl3ZYtrzxOge6OKdCY='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests" />
   <meta name="theme-color" content="#060606" />
   <title>Marcelo Markets V9.1</title>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -795,7 +795,17 @@
         <button id="googleLoginBtn" type="button" class="btn">Continue with Google</button>
       </div>
     </div>
+    <div id="authRecovery" hidden>
+      <p class="auth-help">Enter the one-time code from your latest password-reset email. Codes expire and can only be used once.</p>
+      <label class="field">Account email <input id="recoveryEmail" type="email" autocomplete="email" maxlength="254" /></label>
+      <label class="field">Recovery code <input id="recoveryCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" pattern="[0-9]{6,8}" placeholder="6-digit code" /></label>
+      <div class="auth-actions">
+        <button id="verifyRecoveryBtn" type="button" class="btn primary">Verify code</button>
+        <button id="cancelRecoveryBtn" type="button" class="btn">Back to sign in</button>
+      </div>
+    </div>
     <div id="authPasswordReset" hidden>
+      <p class="auth-help">Code verified. Choose a new password for your account.</p>
       <label class="field">New password <input id="newPassword" type="password" autocomplete="new-password" minlength="8" /></label>
       <button id="updatePasswordBtn" type="button" class="btn primary">Update password</button>
     </div>
@@ -1807,6 +1817,7 @@ let savedPredictions={};
 let authEpoch=0;
 let accountLoading=false;
 let resetMode=false;
+let recoveryStep="none"; // none | verify
 const userConfig=window.MARCELO_CONFIG||{};
 
 function showAuthMessage(message,error=false){
@@ -1820,8 +1831,10 @@ function showAccountError(error){
   if(!$("authDialog").open) $("authDialog").showModal();
 }
 function openAuthDialog(){
-  showAuthMessage("");
-  $("authDialog").showModal();
+  if(!$("authDialog").open){
+    showAuthMessage("");
+    $("authDialog").showModal();
+  }
 }
 function requireAccount(){
   if(!db){openAuthDialog();showAuthMessage("Account setup is required before personal data can be saved.",true);return false;}
@@ -1836,8 +1849,11 @@ function updateAuthUI(){
   const signed=!!activeUser;
   $("accountBtn").textContent=signed?"My account":"Sign in";
   $("accountBanner").hidden=signed;
-  $("authSignedOut").hidden=signed;
-  $("authSignedIn").hidden=!signed;
+  $("authSignedOut").hidden=signed || recoveryStep!=="none" || resetMode;
+  $("authSignedIn").hidden=!signed || recoveryStep!=="none" || resetMode;
+  $("authRecovery").hidden=recoveryStep!=="verify";
+  $("authPasswordReset").hidden=!resetMode;
+  $("authTitle").textContent=resetMode?"Create a new password":recoveryStep==="verify"?"Enter recovery code":"Your free account";
   $("currentEmail").textContent=activeUser?.email||"";
   $("accountBanner").firstChild.textContent=!db
     ? "Accounts need one-time setup by the app owner. Market research remains public. "
@@ -1964,8 +1980,49 @@ $("forgotPasswordBtn").addEventListener("click",async()=>{
   if(!db){showAuthMessage("Account setup is required.",true);return;}
   const email=$("authEmail").value.trim();
   if(!email.includes("@")){showAuthMessage("Enter your email first.",true);return;}
-  const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:loginRedirect()});
-  showAuthMessage(error?error.message:"If the address is registered, a reset email will arrive.",!!error);
+  const button=$("forgotPasswordBtn");
+  button.disabled=true;
+  showAuthMessage("Requesting a recovery code...");
+  try{
+    // The Supabase Reset Password email template must contain {{ .Token }}, not a clickable confirmation link.
+    const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:loginRedirect()});
+    if(error) throw error;
+    $("recoveryEmail").value=email;
+    $("recoveryCode").value="";
+    recoveryStep="verify";
+    resetMode=false;
+    updateAuthUI();
+    showAuthMessage("If that account exists, check your email for a one-time recovery code.");
+  }catch(err){showAuthMessage(err.message||"Unable to send a recovery code.",true);}
+  finally{button.disabled=false;}
+});
+$("cancelRecoveryBtn").addEventListener("click",()=>{
+  recoveryStep="none";
+  $("recoveryCode").value="";
+  updateAuthUI();
+  showAuthMessage("");
+});
+$("verifyRecoveryBtn").addEventListener("click",async()=>{
+  if(!db){showAuthMessage("Account setup is required.",true);return;}
+  const email=$("recoveryEmail").value.trim();
+  const token=$("recoveryCode").value.trim();
+  if(!email.includes("@") || !/^[0-9]{6,8}$/.test(token)){
+    showAuthMessage("Enter your account email and the numeric code from your newest recovery email.",true);
+    return;
+  }
+  const button=$("verifyRecoveryBtn");
+  button.disabled=true;
+  showAuthMessage("Verifying recovery code...");
+  try{
+    const {error}=await db.auth.verifyOtp({email,token,type:"recovery"});
+    if(error) throw error;
+    $("recoveryCode").value="";
+    recoveryStep="none";
+    resetMode=true;
+    updateAuthUI();
+    showAuthMessage("Code verified. Set your new password below.");
+  }catch(err){showAuthMessage(err.message||"That code is invalid or expired. Request a fresh code.",true);}
+  finally{button.disabled=false;}
 });
 $("googleLoginBtn").addEventListener("click",async()=>{
   if(!db){showAuthMessage("Account setup is required.",true);return;}
@@ -1978,7 +2035,12 @@ $("updatePasswordBtn").addEventListener("click",async()=>{
   if(password.length<8){showAuthMessage("Use at least 8 characters.",true);return;}
   const {error}=await db.auth.updateUser({password});
   showAuthMessage(error?error.message:"Password updated. You can close this window.",!!error);
-  if(!error){resetMode=false;$("authPasswordReset").hidden=true;}
+  if(!error){
+    resetMode=false;
+    recoveryStep="none";
+    $("newPassword").value="";
+    updateAuthUI();
+  }
 });
 $("signOutBtn").addEventListener("click",async()=>{
   if(!db) return;
@@ -2001,7 +2063,10 @@ async function initAccounts(){
   // Keep callback synchronous; never await database calls inside the auth callback.
   db.auth.onAuthStateChange((event,session)=>{
     if(event==="PASSWORD_RECOVERY"){
-      resetMode=true;$("authPasswordReset").hidden=false;openAuthDialog();
+      resetMode=true;
+      recoveryStep="none";
+      updateAuthUI();
+      openAuthDialog();
     }
     if(["INITIAL_SESSION","SIGNED_IN","SIGNED_OUT","USER_UPDATED"].includes(event)){
       setTimeout(()=>{applyAuthUser(session?.user||null).catch(showAccountError);},0);
