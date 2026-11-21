@@ -312,11 +312,11 @@
     a{color:var(--accent)}
     .bottom-nav{
       display:none;
-      position:fixed;bottom:0;left:0;right:0;z-index:60;
+      position:fixed;bottom:calc(10px + max(36px, env(safe-area-inset-bottom, 0px)));left:0;right:0;z-index:60;
       background:rgba(6,6,6,.96);backdrop-filter:blur(18px);
-      border-top:1px solid #222;
-      /* Keep mobile navigation above the iPhone home indicator even when inset reports zero. */
-      padding:10px 8px max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
+      border-top:1px solid #222;border-bottom:1px solid #222;
+      /* Raise the entire tab bar above the iPhone gesture/home indicator. */
+      padding:8px 8px 9px;
       grid-template-columns:repeat(5,minmax(0,1fr));
     }
     .bottom-tab{
