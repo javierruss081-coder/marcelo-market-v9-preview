@@ -314,12 +314,15 @@
       display:none;
       position:fixed;bottom:0;left:0;right:0;z-index:60;
       background:rgba(6,6,6,.96);backdrop-filter:blur(18px);
-      border-top:1px solid #222;padding:7px 8px calc(7px + env(safe-area-inset-bottom));
+      border-top:1px solid #222;
+      /* Keep mobile navigation above the iPhone home indicator even when inset reports zero. */
+      padding:10px 8px max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
       grid-template-columns:repeat(5,minmax(0,1fr));
     }
     .bottom-tab{
-      border:0;background:transparent;color:#777;padding:4px 6px;
-      display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:750;
+      border:0;background:transparent;color:#777;padding:7px 3px 4px;
+      min-height:52px;touch-action:manipulation;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:750;
     }
     .bottom-tab span{font-size:1.25rem;line-height:1}
     .bottom-tab small{font-size:.74rem}
@@ -338,12 +341,13 @@
       .movers-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
       .home-grid,.stocks-layout{grid-template-columns:1fr}
       .nav{display:none}
+      .app{padding-bottom:calc(150px + env(safe-area-inset-bottom, 0px))}
       .bottom-nav{display:grid}
       .top-actions #settingsBtn{display:none}
       .stock-list{max-height:440px}
     }
     @media(max-width:560px){
-      .app{padding:0 14px 90px}
+      .app{padding:0 14px calc(150px + env(safe-area-inset-bottom, 0px))}
       .topbar{min-height:62px}
       .brand small{display:none}
       .top-actions .btn{font-size:.72rem;padding:7px 10px}
