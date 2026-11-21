@@ -770,19 +770,17 @@
     </section>
 
     <section id="picksView" hidden>
-      <section class="research-hero" aria-label="Daily stock research">
-        <div class="eyebrow">MARCELO RESEARCH · DAILY PICK</div>
-        <h2>Latest daily stock pick</h2>
-        <div id="homeFeedStatus" class="muted" role="status" aria-live="polite">Checking market data…</div>
-        <div id="dailyPick" aria-live="polite">Waiting for market data.</div>
-        <details class="research-history" open>
-          <summary>Today’s automatically updated stock watchlist</summary>
-          <p class="muted" style="margin:8px 0 10px;font-size:.84rem">Top-moving U.S. stocks from TradingView. Quotes may be delayed; weekends show the latest trading session. These are watchlist candidates, not a buy recommendation or Marcelo’s scored daily pick.</p>
-          <iframe title="TradingView daily stock candidates" src="./daily-candidates.html" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:310px;border:1px solid #315640;border-radius:12px;background:#0e1c16"></iframe>
-        </details>
-        <div class="research-actions"><button id="homeRefresh" type="button" class="btn">Refresh markets</button><a class="btn primary" href="./live-picks.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;text-decoration:none">Explore live stock candidates ↗</a><button id="homeRetryAccount" type="button" class="btn" hidden>Retry account data</button></div>
-        <div id="opportunityStatus" class="research-alert" role="status"></div>
-        <details class="research-history"><summary>Daily pick performance</summary><p class="muted">Public research picks recorded on this browser when the app is open. Five later trading-session closes; no trades, dividends or fees. Not synced across devices.</p><div id="pickHistory"></div></details>
+      <section class="research-hero" aria-label="Daily stock candidates">
+        <iframe title="TradingView automatically updated U.S. stock candidates; prices may be delayed and are not investment advice" src="./daily-candidates.html" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:clamp(370px,70vh,700px);border:1px solid #315640;border-radius:12px;background:#0e1c16"></iframe>
+        <!-- Keep the app's existing research elements available to its scripts without displaying the retired panel. -->
+        <div hidden aria-hidden="true" style="display:none">
+          <div id="homeFeedStatus" class="muted" role="status">Checking market data…</div>
+          <div id="dailyPick">Waiting for market data.</div>
+          <button id="homeRefresh" type="button">Refresh markets</button>
+          <button id="homeRetryAccount" type="button" hidden>Retry account data</button>
+          <div id="opportunityStatus"></div>
+          <div id="pickHistory"></div>
+        </div>
       </section>
     </section>
   </main>
