@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-vbmtfhERCEgMXM8MVLGR/Jwl6gDNy0quIzaELPfzhTg='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-vbmtfhERCEgMXM8MVLGR/Jwl6gDNy0quIzaELPfzhTg='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#060606" />
   <title>Marcelo Markets V9.2</title>
@@ -549,6 +549,11 @@
         <h2>Latest daily stock pick</h2>
         <div id="homeFeedStatus" class="muted" role="status" aria-live="polite">Checking market data…</div>
         <div id="dailyPick" aria-live="polite">Waiting for market data.</div>
+        <details class="research-history" open>
+          <summary>Today’s automatically updated stock watchlist</summary>
+          <p class="muted" style="margin:8px 0 10px;font-size:.84rem">Top-moving U.S. stocks from TradingView. Quotes may be delayed; weekends show the latest trading session. These are watchlist candidates, not a buy recommendation or Marcelo’s scored daily pick.</p>
+          <iframe title="TradingView daily stock candidates" src="./daily-candidates.html" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:310px;border:1px solid #315640;border-radius:12px;background:#0e1c16"></iframe>
+        </details>
         <div class="research-actions"><button id="homeRefresh" type="button" class="btn">Refresh markets</button><a class="btn primary" href="./live-picks.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;text-decoration:none">Explore live stock candidates ↗</a><button id="homeRetryAccount" type="button" class="btn" hidden>Retry account data</button></div>
         <div id="opportunityStatus" class="research-alert" role="status"></div>
         <details class="research-history"><summary>Daily pick performance</summary><p class="muted">Public research picks recorded on this browser when the app is open. Five later trading-session closes; no trades, dividends or fees. Not synced across devices.</p><div id="pickHistory"></div></details>
