@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-vbmtfhERCEgMXM8MVLGR/Jwl6gDNy0quIzaELPfzhTg='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-Hen48dYRf7T93QqoPfuv+LEXo+v3ODCV1Boa+nmYGa4='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#060606" />
   <title>Marcelo Markets V9.2</title>
@@ -315,7 +315,7 @@
       position:fixed;bottom:0;left:0;right:0;z-index:60;
       background:rgba(6,6,6,.96);backdrop-filter:blur(18px);
       border-top:1px solid #222;padding:7px 8px calc(7px + env(safe-area-inset-bottom));
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(5,minmax(0,1fr));
     }
     .bottom-tab{
       border:0;background:transparent;color:#777;padding:4px 6px;
@@ -523,6 +523,7 @@
     <button class="btn" data-view="stocks">Markets</button>
     <button class="btn" data-view="offers">Rewards</button>
     <button class="btn" data-view="watchlist">Watchlist</button>
+    <button class="btn" data-view="picks">Daily Picks</button>
   </nav>
 
   <main>
@@ -544,20 +545,6 @@
         </div>
       </div>
 
-      <section class="research-hero" aria-label="Daily stock research">
-        <div class="eyebrow">MARCELO RESEARCH · DAILY PICK</div>
-        <h2>Latest daily stock pick</h2>
-        <div id="homeFeedStatus" class="muted" role="status" aria-live="polite">Checking market data…</div>
-        <div id="dailyPick" aria-live="polite">Waiting for market data.</div>
-        <details class="research-history" open>
-          <summary>Today’s automatically updated stock watchlist</summary>
-          <p class="muted" style="margin:8px 0 10px;font-size:.84rem">Top-moving U.S. stocks from TradingView. Quotes may be delayed; weekends show the latest trading session. These are watchlist candidates, not a buy recommendation or Marcelo’s scored daily pick.</p>
-          <iframe title="TradingView daily stock candidates" src="./daily-candidates.html" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:310px;border:1px solid #315640;border-radius:12px;background:#0e1c16"></iframe>
-        </details>
-        <div class="research-actions"><button id="homeRefresh" type="button" class="btn">Refresh markets</button><a class="btn primary" href="./live-picks.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;text-decoration:none">Explore live stock candidates ↗</a><button id="homeRetryAccount" type="button" class="btn" hidden>Retry account data</button></div>
-        <div id="opportunityStatus" class="research-alert" role="status"></div>
-        <details class="research-history"><summary>Daily pick performance</summary><p class="muted">Public research picks recorded on this browser when the app is open. Five later trading-session closes; no trades, dividends or fees. Not synced across devices.</p><div id="pickHistory"></div></details>
-      </section>
       <div class="section-head movers-head">
         <div><div class="eyebrow">LATEST PUBLISHED SNAPSHOT</div><h2>Market movers</h2><div id="moversFeedStatus" class="muted" role="status">Checking market data…</div></div>
         <button class="round-action small" data-jump="stocks" aria-label="Search markets">⌕</button>
@@ -781,12 +768,30 @@
         <div id="savedOutlooks" aria-live="polite"></div>
       </div>
     </section>
+
+    <section id="picksView" hidden>
+      <section class="research-hero" aria-label="Daily stock research">
+        <div class="eyebrow">MARCELO RESEARCH · DAILY PICK</div>
+        <h2>Latest daily stock pick</h2>
+        <div id="homeFeedStatus" class="muted" role="status" aria-live="polite">Checking market data…</div>
+        <div id="dailyPick" aria-live="polite">Waiting for market data.</div>
+        <details class="research-history" open>
+          <summary>Today’s automatically updated stock watchlist</summary>
+          <p class="muted" style="margin:8px 0 10px;font-size:.84rem">Top-moving U.S. stocks from TradingView. Quotes may be delayed; weekends show the latest trading session. These are watchlist candidates, not a buy recommendation or Marcelo’s scored daily pick.</p>
+          <iframe title="TradingView daily stock candidates" src="./daily-candidates.html" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:310px;border:1px solid #315640;border-radius:12px;background:#0e1c16"></iframe>
+        </details>
+        <div class="research-actions"><button id="homeRefresh" type="button" class="btn">Refresh markets</button><a class="btn primary" href="./live-picks.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;text-decoration:none">Explore live stock candidates ↗</a><button id="homeRetryAccount" type="button" class="btn" hidden>Retry account data</button></div>
+        <div id="opportunityStatus" class="research-alert" role="status"></div>
+        <details class="research-history"><summary>Daily pick performance</summary><p class="muted">Public research picks recorded on this browser when the app is open. Five later trading-session closes; no trades, dividends or fees. Not synced across devices.</p><div id="pickHistory"></div></details>
+      </section>
+    </section>
   </main>
 
   <nav class="bottom-nav" aria-label="App navigation">
     <button class="bottom-tab active" data-bottom-view="home"><span>⌂</span><small>Home</small></button>
     <button class="bottom-tab" data-bottom-view="stocks"><span>⌕</span><small>Markets</small></button>
     <button class="bottom-tab" data-bottom-view="watchlist"><span>☆</span><small>Watchlist</small></button>
+    <button class="bottom-tab" data-bottom-view="picks"><span>✦</span><small>Picks</small></button>
     <button class="bottom-tab" data-bottom-view="offers"><span>◇</span><small>Rewards</small></button>
   </nav>
 
@@ -1174,7 +1179,7 @@ async function toggleWatch(ticker){
 }
 
 function switchView(view){
-  ["home","stocks","offers","watchlist"].forEach(v=>{
+  ["home","stocks","offers","watchlist","picks"].forEach(v=>{
     $(v+"View").hidden=v!==view;
   });
   document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
@@ -1183,6 +1188,7 @@ function switchView(view){
   if(view==="stocks") renderStocks();
   if(view==="offers") renderOffers();
   if(view==="watchlist") renderWatchlist();
+  if(view==="picks") renderResearch(decoratedStocks.length?decoratedStocks:decorateStocks(market.stocks||[]));
   if(view==="home") renderHome();
 }
 
@@ -1898,7 +1904,7 @@ function openAuthDialog(){
 }
 function requireAccount(){
   if(!db){openAuthDialog();showAuthMessage("Account setup is required before personal data can be saved.",true);return false;}
-  if(!activeUser || accountLoading || accountError){openAuthDialog();showAuthMessage(accountError?"Account data unavailable. Close this dialog and use Retry account data on Home.":"Please sign in and wait for your account to finish loading.",true);return false;}
+  if(!activeUser || accountLoading || accountError){openAuthDialog();showAuthMessage(accountError?"Account data unavailable. Close this dialog and use Retry account data on Daily Picks.":"Please sign in and wait for your account to finish loading.",true);return false;}
   return true;
 }
 function refreshPersonalUI(){
