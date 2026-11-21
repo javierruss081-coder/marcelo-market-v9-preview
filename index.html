@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-mmguFQZ8KKaY/zZG+ghrLF+iuVyL08nxOOFK2P4s9hQ='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-vbmtfhERCEgMXM8MVLGR/Jwl6gDNy0quIzaELPfzhTg='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests" />
   <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#060606" />
   <title>Marcelo Markets V9.2</title>
@@ -554,7 +554,7 @@
         <details class="research-history"><summary>Daily pick performance</summary><p class="muted">Public research picks recorded on this browser when the app is open. Five later trading-session closes; no trades, dividends or fees. Not synced across devices.</p><div id="pickHistory"></div></details>
       </section>
       <div class="section-head movers-head">
-        <div><div class="eyebrow">TODAY</div><h2>Market movers</h2></div>
+        <div><div class="eyebrow">LATEST PUBLISHED SNAPSHOT</div><h2>Market movers</h2><div id="moversFeedStatus" class="muted" role="status">Checking market data…</div></div>
         <button class="round-action small" data-jump="stocks" aria-label="Search markets">⌕</button>
       </div>
       <div class="movers-strip" id="moversStrip"></div>
@@ -1125,7 +1125,7 @@ function publicPicks(){return readArray('marceloPublicPicks92').filter(x=>x&&/^\
 function updatePublicPicks(stocks){
  const day=feedDay(market.updated_at);if(!day||!freshFeed(market.updated_at))return;
  const rows=publicPicks();const candidate=pickCandidate(stocks);
- if(candidate&&day===feedDay(new Date().toISOString())&&!rows.some(x=>x.day===day))rows.unshift({day,ticker:candidate.ticker,price:Number(candidate.price),score:candidate._score,recorded:market.updated_at});
+ if(candidate&&!rows.some(x=>x.day===day))rows.unshift({day,ticker:candidate.ticker,price:Number(candidate.price),score:candidate._score,recorded:market.updated_at,generated_at:new Date().toISOString()});
  for(const row of rows){if(Number.isFinite(row.result))continue;const stock=stocks.find(s=>s.ticker===row.ticker);if(!stock)continue;const map=new Map(validHistory(stock).filter(p=>/^\d{4}-\d{2}-\d{2}$/.test(String(p.date))&&p.date>row.day&&p.date<=day).map(p=>[p.date,Number(p.close)]));const dates=[...map.keys()].sort();if(dates.length>=5){row.result=(map.get(dates[4])/row.price-1)*100;row.end=dates[4];}}
  writeArray('marceloPublicPicks92',rows.slice(0,120));
 }
@@ -1133,7 +1133,7 @@ function renderResearch(stocks){
  $('homeFeedStatus').textContent=marketStatus;
  $('homeRetryAccount').hidden=!accountError||!activeUser||accountLoading;
  const rows=publicPicks(),day=feedDay(market.updated_at),row=rows.find(x=>x.day===day),stock=row&&stocks.find(x=>x.ticker===row.ticker);
- $('dailyPick').innerHTML=(!freshFeed(market.updated_at)||marketStatus.startsWith('Market data unavailable'))?'<p class="muted">No fresh, dated feed available. A new pick will not be generated from stale prices.</p>':!stock?'<p class="muted">No qualifying pick is recorded for this feed date. Picks are recorded only on the current market date; no pick is forced.</p>':`<h2>${esc(stock.ticker)} <span class="muted">${esc(stock.name||'')}</span></h2><div class="muted">Feed date ${esc(day)} · recorded reference ${money(row.price)}</div><div class="research-metrics"><div>Research score<strong>${Number(row.score)}/100</strong></div><div>20-session change<strong>${pct(stock._research.m20)}</strong></div><div>Daily volatility<strong>${stock._research.risk==null?"—":stock._research.risk.toFixed(2)+"%"}</strong></div></div><p>Risk: ${esc(stock._research.riskLabel)}. Positive 20- and 60-session momentum, liquidity and price stability drive selection. No price cap.</p><button class="btn primary" type="button" id="dailyPickOpen">View stock research</button><p class="muted">Technical research only; not a buy recommendation or a forecast of business growth.</p>`;
+ $('dailyPick').innerHTML=(!freshFeed(market.updated_at)||marketStatus.startsWith('Market data unavailable'))?'<p class="muted">Price data is outdated. The daily pick requires a newly published market feed; Refresh markets only reloads the same file.</p>':!stock?'<p class="muted">No qualifying stock meets the research thresholds for the latest available market session. No pick is forced.</p>':`<h2>${esc(stock.ticker)} <span class="muted">${esc(stock.name||'')}</span></h2><div class="muted">Feed date ${esc(day)} · recorded reference ${money(row.price)}</div><div class="research-metrics"><div>Research score<strong>${Number(row.score)}/100</strong></div><div>20-session change<strong>${pct(stock._research.m20)}</strong></div><div>Daily volatility<strong>${stock._research.risk==null?"—":stock._research.risk.toFixed(2)+"%"}</strong></div></div><p>Risk: ${esc(stock._research.riskLabel)}. Positive 20- and 60-session momentum, liquidity and price stability drive selection. No price cap.</p><button class="btn primary" type="button" id="dailyPickOpen">View stock research</button><p class="muted">Technical research only; not a buy recommendation or a forecast of business growth.</p>`;
  if($('dailyPickOpen'))$('dailyPickOpen').addEventListener('click',()=>openStock(stock.ticker));
  const done=rows.filter(x=>Number.isFinite(x.result));const avg=done.length?done.reduce((sum,x)=>sum+x.result,0)/done.length:null;
  $('pickHistory').innerHTML=(done.length?`<p>${done.length} completed · Average ${pct(avg)} · Positive ${done.filter(x=>x.result>0).length}/${done.length}</p>`:'<p class="muted">No completed picks yet.</p>')+rows.slice(0,20).map(x=>`<div class="research-row"><span><strong>${esc(x.ticker)}</strong><br><span class="muted">${esc(x.day)}</span></span><span>${money(x.price)}</span><span class="${Number.isFinite(x.result)?x.result>=0?'up':'down':''}">${Number.isFinite(x.result)?pct(x.result):'Pending'}</span></div>`).join('');
@@ -1209,7 +1209,7 @@ function refreshStocks(){
   const data=await fetchFeed(url);if(!data||!Array.isArray(data.stocks))throw new Error('Price feed is invalid');
   const stocks=data.stocks.filter(x=>x&&/^[A-Z0-9.^-]{1,12}$/.test(String(x.ticker))&&Number.isFinite(Number(x.price))&&Number(x.price)>0).map(x=>({...x,history:validHistory(x),news:Array.isArray(x.news)?x.news.filter(Boolean):[]}));
   market={...data,stocks};decoratedStocks=decorateStocks(stocks);
-  marketStatus=(freshFeed(data.updated_at)?'Feed updated ':'Stale or undated feed · ')+(data.updated_at?humanDate(data.updated_at):'no timestamp');$('stockStatus').textContent=marketStatus;
+  marketStatus=(freshFeed(data.updated_at)?'Dated market snapshot · ':'OUTDATED market snapshot (not live) · ')+(data.updated_at?humanDate(data.updated_at):'no timestamp');$('stockStatus').textContent=marketStatus;
   updatePublicPicks(decoratedStocks);fillSectors();renderHome();renderStocks();renderWatchlist();void notifyOpportunity();
  }catch(e){marketStatus='Market data unavailable — '+(e.name==='AbortError'?'request timed out':e.message)+'. '+(decoratedStocks.length?'Showing last loaded prices.':'Use Refresh markets to retry.');$('stockStatus').textContent=marketStatus;renderHome();}
  })().finally(()=>{stockRequest=null;});return stockRequest;
@@ -1420,6 +1420,8 @@ function renderHome(){
   $("homeOffers").textContent=offers.length;
   $("homeNew").textContent=offers.filter(o=>o["New"]).length;
   renderResearch(stocks);
+  const feedLabel=market.updated_at?humanDate(market.updated_at):'unknown date';
+  $("moversFeedStatus").textContent=freshFeed(market.updated_at)?`Prices from ${feedLabel} (not real-time)`:`OUTDATED prices from ${feedLabel} — not current quotes`;
   renderPaperPortfolio(stocks);
   renderMoverStrip(stocks);
   renderHomeWatchlist(stocks);
