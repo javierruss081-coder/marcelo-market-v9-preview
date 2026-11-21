@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#070a09">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src https://s3.tradingview.com; frame-src https://*.tradingview.com https://*.tradingview-widget.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Live Stock Scanner | Marcelo Markets</title>
+  <link rel="icon" href="./icon-192.png">
+  <style>
+    :root {font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color-scheme:dark;background:#080a09;color:#f4f7f5}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(circle at 0 0,#0c2b20 0%,transparent 37rem),#080a09}
+    .wrap{max-width:1260px;margin:auto;padding:18px}
+    header{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-bottom:1px solid #29392e;padding:8px 0 20px}
+    .brand{display:flex;align-items:center;gap:12px}.brand img{width:45px;height:45px;border-radius:12px}
+    h1{font-size:1.4rem;margin:0}h2{font-size:1.12rem;margin:0 0 8px}p{line-height:1.5}
+    .sub,small{color:#9ea9a2}.sub{font-size:.86rem;margin-top:4px}
+    a{color:#8fe8ad}.back{border:1px solid #416c4d;color:#c7f4d2;text-decoration:none;padding:10px 16px;border-radius:12px}
+    .intro{margin:25px 0 18px}.eyebrow{letter-spacing:.12em;text-transform:uppercase;color:#79dfa1;font-size:.7rem;font-weight:800}
+    .intro p{color:#abb7af;max-width:920px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel{background:#101714;border:1px solid #2b4033;border-radius:18px;padding:14px;overflow:hidden}
+    .widget{height:580px;background:#131b17;border-radius:10px;overflow:hidden}
+    .tradingview-widget-container{height:100%;width:100%;display:flex;flex-direction:column}
+    .tradingview-widget-container__widget{height:calc(100% - 29px);width:100%;flex:1}
+    .tradingview-widget-copyright{font-size:12px;min-height:29px;text-align:right;padding:6px}
+    .note{background:#101714;padding:15px;border:1px solid #2b4033;border-radius:13px;margin:20px 0;font-size:.89rem;color:#b9c6bc}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.widget{height:520px}.wrap{padding:12px}h1{font-size:1.23rem}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><img src="./logo.png" alt="Marcelo Markets logo"><div><h1>Marcelo Markets · Live Stock Scanner</h1><div class="sub">U.S. market candidates · TradingView-hosted market data</div></div></div>
+    <a class="back" href="./">← Back to Marcelo Markets</a>
+  </header>
+  <div class="intro">
+    <div class="eyebrow">Live / delayed research watchlist</div>
+    <h2>Find stocks moving in today's market</h2>
+    <p>These are <strong>market-screening candidates, not automatic buy picks</strong>. Explore the gainers and most active U.S. stocks below; use the screeners' toolbar to sort and filter. Quotes may be delayed, and on weekends or holidays they reflect the most recent session.</p>
+  </div>
+  <main class="grid">
+    <section class="panel" aria-label="Top gainers">
+      <h2>Trending up · Top gainers</h2>
+      <div class="widget">
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/screener/" rel="noopener nofollow" target="_blank">Stock Screener</a> by TradingView</div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+          {"width":"100%","height":"100%","defaultColumn":"overview","defaultScreen":"top_gainers","showToolbar":true,"locale":"en","market":"us","colorTheme":"dark"}
+          </script>
+        </div>
+      </div>
+    </section>
+    <section class="panel" aria-label="Most active stocks">
+      <h2>High activity · Most active</h2>
+      <div class="widget">
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/screener/" rel="noopener nofollow" target="_blank">Stock Screener</a> by TradingView</div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+          {"width":"100%","height":"100%","defaultColumn":"overview","defaultScreen":"most_active","showToolbar":true,"locale":"en","market":"us","colorTheme":"dark"}
+          </script>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="note">Market data and ranking are provided independently by TradingView, with exchange-dependent delays and availability. Marcelo Markets does not calculate these lists or claim they are investment recommendations. Our separately labeled <strong>Daily Research Pick</strong> requires a fresh, licensed price-history source; that automated publisher is not active yet. No account login is required to view this screen.</div>
+</div>
+</body>
+</html>

@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-KO3yIQNXQ9iXZnrt2q2AptAN/fl3ZYtrzxOge6OKdCY='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-Hen48dYRf7T93QqoPfuv+LEXo+v3ODCV1Boa+nmYGa4='; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#060606" />
-  <title>Marcelo Markets V9.1</title>
+  <title>Marcelo Markets V9.2</title>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=9.1" />
-  <link rel="icon" href="icon-192.png?v=9.1" />
+  <link rel="manifest" href="manifest.json?v=9.2" />
+  <link rel="icon" href="icon-192.png?v=9.2" />
   <style>
     :root{
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -199,7 +200,7 @@
     }
     .nav button{
       border:0;background:transparent;border-radius:0;padding:12px 1px;
-      color:#9c9c9c;font-size:.9rem;
+      color:#9c9c9c;font-size:1.05rem;font-weight:650;
       border-bottom:2px solid transparent;
     }
     .nav .active{background:transparent;border-color:var(--accent);color:#fff}
@@ -314,14 +315,14 @@
       position:fixed;bottom:0;left:0;right:0;z-index:60;
       background:rgba(6,6,6,.96);backdrop-filter:blur(18px);
       border-top:1px solid #222;padding:7px 8px calc(7px + env(safe-area-inset-bottom));
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(5,minmax(0,1fr));
     }
     .bottom-tab{
       border:0;background:transparent;color:#777;padding:4px 6px;
       display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:750;
     }
     .bottom-tab span{font-size:1.25rem;line-height:1}
-    .bottom-tab small{font-size:.62rem}
+    .bottom-tab small{font-size:.74rem}
     .bottom-tab.active{color:#fff}
     .bottom-tab.active span{color:var(--accent)}
     .watch-preview-list{border-top:1px solid #202020}
@@ -484,6 +485,12 @@
     @media(max-width:620px){.account-banner{align-items:stretch}.account-banner button{width:100%}
       .saved-outlook-row{flex-direction:column;align-items:flex-start}}
 
+    .research-hero{border:1px solid #264034;border-radius:20px;background:linear-gradient(140deg,#10291d,#101713 70%);padding:20px;margin:18px 0;color:#f3fff5}
+    .research-hero .eyebrow{color:#86d7a5;letter-spacing:.12em}.research-hero h2{font-size:1.55rem;margin:5px 0 10px}.research-hero .muted{color:#a6b8aa}
+    .research-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}.research-metrics>div{background:#0b1710;border:1px solid #274633;border-radius:12px;padding:12px}.research-metrics strong{display:block;font-size:1.12rem;margin-top:4px}
+    .research-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}.research-history{border-top:1px solid #304334;padding-top:12px;margin-top:14px}.research-history summary{cursor:pointer;font-weight:650}.research-row{display:grid;grid-template-columns:1fr auto auto;column-gap:12px;border-bottom:1px solid #29372d;padding:10px 0;align-items:center}
+    #homeFeedStatus{overflow-wrap:anywhere}.research-hero button:focus-visible{outline:2px solid #86d7a5;outline-offset:3px}.research-alert{margin:10px 0;color:#b7e7c4}
+    @media(max-width:520px){.research-hero{padding:15px}.research-metrics{gap:6px}.research-metrics>div{padding:8px}.research-metrics strong{font-size:.95rem}.research-row{font-size:.85rem}}
   </style>
 </head>
 <body>
@@ -492,7 +499,7 @@
     <div class="brand">
       <img src="logo.png?v=9" alt="Marcelo Markets miner logo">
       <div>
-        <h1>Marcelo Markets V9.1</h1>
+        <h1>Marcelo Markets V9.2</h1>
         <small>One app • private accounts • every device</small>
       </div>
     </div>
@@ -516,6 +523,7 @@
     <button class="btn" data-view="stocks">Markets</button>
     <button class="btn" data-view="offers">Rewards</button>
     <button class="btn" data-view="watchlist">Watchlist</button>
+    <button class="btn" data-view="picks">Daily Picks</button>
   </nav>
 
   <main>
@@ -538,7 +546,7 @@
       </div>
 
       <div class="section-head movers-head">
-        <div><div class="eyebrow">TODAY</div><h2>Market movers</h2></div>
+        <div><div class="eyebrow">LATEST PUBLISHED SNAPSHOT</div><h2>Market movers</h2><div id="moversFeedStatus" class="muted" role="status">Checking market data…</div></div>
         <button class="round-action small" data-jump="stocks" aria-label="Search markets">⌕</button>
       </div>
       <div class="movers-strip" id="moversStrip"></div>
@@ -600,7 +608,7 @@
               <option value="20">Under $20</option>
               <option value="50">Under $50</option>
               <option value="100">Under $100</option>
-              <option value="999999" selected>Any price</option>
+              <option value="Infinity" selected>Any price</option>
             </select>
           </div>
           <div class="field">
@@ -760,12 +768,28 @@
         <div id="savedOutlooks" aria-live="polite"></div>
       </div>
     </section>
+
+    <section id="picksView" hidden>
+      <section class="research-hero" aria-label="Daily stock candidates">
+        <iframe title="TradingView automatically updated U.S. stock candidates; prices may be delayed and are not investment advice" src="./daily-candidates.html" loading="eager" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:clamp(370px,70vh,700px);border:1px solid #315640;border-radius:12px;background:#0e1c16"></iframe>
+        <!-- Keep the app's existing research elements available to its scripts without displaying the retired panel. -->
+        <div hidden aria-hidden="true" style="display:none">
+          <div id="homeFeedStatus" class="muted" role="status">Checking market data…</div>
+          <div id="dailyPick">Waiting for market data.</div>
+          <button id="homeRefresh" type="button">Refresh markets</button>
+          <button id="homeRetryAccount" type="button" hidden>Retry account data</button>
+          <div id="opportunityStatus"></div>
+          <div id="pickHistory"></div>
+        </div>
+      </section>
+    </section>
   </main>
 
   <nav class="bottom-nav" aria-label="App navigation">
     <button class="bottom-tab active" data-bottom-view="home"><span>⌂</span><small>Home</small></button>
     <button class="bottom-tab" data-bottom-view="stocks"><span>⌕</span><small>Markets</small></button>
     <button class="bottom-tab" data-bottom-view="watchlist"><span>☆</span><small>Watchlist</small></button>
+    <button class="bottom-tab" data-bottom-view="picks"><span>✦</span><small>Picks</small></button>
     <button class="bottom-tab" data-bottom-view="offers"><span>◇</span><small>Rewards</small></button>
   </nav>
 
@@ -873,7 +897,7 @@
   </form>
 </dialog>
 
-<script src="./config.js?v=9.1"></script>
+<script src="./config.js?v=9.2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -911,7 +935,7 @@ function compact(v){
   return Intl.NumberFormat("en-US",{notation:"compact",maximumFractionDigits:1}).format(n);
 }
 function pct(v){
-  const n=Number(v); if(!Number.isFinite(n)) return "—";
+  const n=Number(v); if(v==null||!Number.isFinite(n)) return "—";
   return (n>=0?"+":"")+n.toFixed(2)+"%";
 }
 
@@ -988,22 +1012,22 @@ function isStockReward(o){
   return /stock|etf/i.test(String(o["Reward"]||"")) || /stock|etf/i.test(String(o["Offer"]||""));
 }
 
-function scoreStock(s){
-  let score=0;
-  const p=Number(s.price)||0, ch=Number(s.change_pct)||0, vol=Number(s.volume)||0;
-  const avg=Number(s.avg_volume_20d)||0, cap=Number(s.market_cap)||0;
-  if(p>0 && p<=10) score+=25; else if(p<=20) score+=20; else if(p<=50) score+=12;
-  if(cap>=1e10) score+=22; else if(cap>=1e9) score+=17; else if(cap>=3e8) score+=9;
-  if(vol>=5e6) score+=18; else if(vol>=1e6) score+=14; else if(vol>=2e5) score+=7;
-  if(avg>0 && vol/avg>=1.5) score+=10; else if(avg>0 && vol/avg>=1.0) score+=6;
-  if(ch>=0 && ch<=6) score+=15; else if(ch>6 && ch<=12) score+=9; else if(ch<0 && ch>=-3) score+=6;
-  const h=s.history||[];
-  if(h.length>=22){
-    const a=Number(h[h.length-22].close), b=Number(h[h.length-1].close);
-    if(a>0){ const r=(b-a)/a*100; if(r>0 && r<=15) score+=10; else if(r>15) score+=5; }
-  }
-  return Math.max(0,Math.min(100,Math.round(score)));
+function clamp(x,lo,hi){return Math.max(lo,Math.min(hi,x));}
+function validHistory(s){const rows=(Array.isArray(s.history)?s.history:[]).filter(p=>p && Number.isFinite(Number(p.close)) && Number(p.close)>0);return rows.every(p=>/^\d{4}-\d{2}-\d{2}$/.test(String(p.date)))?[...new Map(rows.map(p=>[p.date,p])).values()].sort((a,b)=>a.date.localeCompare(b.date)):rows;}
+function researchMetrics(s){
+ const h=validHistory(s).map(p=>Number(p.close)),price=Number(s.price),vol=Number(s.volume),avg=Number(s.avg_volume_20d),cap=Number(s.market_cap);
+ const ret=n=>h.length>n ? (h.at(-1)/h.at(-1-n)-1)*100:null;
+ const recent=h.slice(-31),m20=ret(20),m60=ret(60),returns=recent.slice(1).map((p,i)=>p/recent[i]-1);
+ const risk=returns.length>=20?stdev(returns)*100:null;
+ const momentum=m20===null?0:clamp(15+m20*1.25,0,30);
+ const longer=m60===null?0:clamp(10+m60*.45,0,20);
+ const liquidity=price>0&&vol>0?clamp((Math.log10(price*vol)-4)*5,0,20):0;
+ const stability=risk===null?0:clamp(20-risk*3,0,20);
+ const scale=cap>0?clamp((Math.log10(cap)-7)*2.5,0,10):0;
+ const score=Math.round(momentum+longer+liquidity+stability+scale);
+ return {score,m20,m60,risk,eligible:h.length>=61&&price>0&&vol>0&&cap>0,riskLabel:risk===null?'Unknown':risk>=4?'High':risk>=2?'Moderate':'Lower historical volatility',relativeVolume:avg>0?vol/avg:null};
 }
+function scoreStock(s){return researchMetrics(s).score;}
 
 
 function linearSlope(values){
@@ -1022,7 +1046,7 @@ function stdev(values){
 }
 
 function trendOutlook(s){
-  const history=(s.history||[]).map(p=>Number(p.close)).filter(Number.isFinite);
+  const history=validHistory(s).map(p=>Number(p.close));
   const price=Number(s.price)||history.at(-1)||0;
   if(history.length<12 || price<=0){
     return {label:'Not enough data', key:'neutral', strength:0, low:price, high:price, projected:price, score:0};
@@ -1051,7 +1075,7 @@ function trendOutlook(s){
   else if(signal<=-16){label='Bearish';key='bear';}
 
   const strength=Math.min(88,Math.max(35,Math.round(48+Math.abs(signal)*0.38-(vol*100)*1.6)));
-  const projected=Math.max(0.01, price*(1 + (shortSlope*5)/100));
+  const projected=Math.max(0.01, price*(1 + clamp(shortSlope*5,-20,20)/100));
   const band=Math.max(price*0.012, price*vol*Math.sqrt(5)*1.25);
   return {
     label,key,strength,
@@ -1070,7 +1094,7 @@ function normalizedSearch(s){
 
 function serverOutlook(s){
   const p=s.prediction;
-  if(!p || !p.label) return trendOutlook(s);
+  if(!p || !p.label || !Number.isFinite(Number(p.analogs)) || Number(p.analogs)<10) return trendOutlook(s);
   return {
     label:p.label,
     key:["bull","bear","neutral"].includes(p.key)?p.key:"neutral",
@@ -1090,12 +1114,48 @@ function decorateStocks(stocks){
   return (stocks||[]).map(s=>({
     ...s,
     _score:scoreStock(s),
+    _research:researchMetrics(s),
     _outlook:serverOutlook(s),
     _search:normalizedSearch(s)
   }));
 }
 
 let decoratedStocks=[];
+let marketStatus='Waiting for market data.';
+let stockRequest=null;
+let accountError=false;
+function readArray(key){try{const a=JSON.parse(safeStore.getItem(key)||'[]');return Array.isArray(a)?a:[];}catch{return [];}}
+function writeArray(key,value){try{safeStore.setItem(key,JSON.stringify(value));}catch{/* storage may be unavailable */}}
+function feedDay(value){const d=new Date(value||'');if(!Number.isFinite(d.getTime()))return null;const f=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const v=Object.fromEntries(f.map(x=>[x.type,x.value]));return `${v.year}-${v.month}-${v.day}`;}
+function freshFeed(value){const ms=Date.parse(value||'');return Number.isFinite(ms)&&Date.now()-ms>=-600000&&Date.now()-ms<=96*3600000;}
+function pickCandidate(stocks){return stocks.filter(s=>s._research.eligible&&s._research.m20>0&&s._research.m60>0&&s._score>=60&&s._research.risk<6).sort((a,b)=>b._score-a._score||a.ticker.localeCompare(b.ticker))[0]||null;}
+function publicPicks(){return readArray('marceloPublicPicks92').filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.day)&&/^[A-Z0-9.^-]{1,12}$/.test(x.ticker)&&Number(x.price)>0).slice(0,120);}
+function updatePublicPicks(stocks){
+ const day=feedDay(market.updated_at);if(!day||!freshFeed(market.updated_at))return;
+ const rows=publicPicks();const candidate=pickCandidate(stocks);
+ if(candidate&&!rows.some(x=>x.day===day))rows.unshift({day,ticker:candidate.ticker,price:Number(candidate.price),score:candidate._score,recorded:market.updated_at,generated_at:new Date().toISOString()});
+ for(const row of rows){if(Number.isFinite(row.result))continue;const stock=stocks.find(s=>s.ticker===row.ticker);if(!stock)continue;const map=new Map(validHistory(stock).filter(p=>/^\d{4}-\d{2}-\d{2}$/.test(String(p.date))&&p.date>row.day&&p.date<=day).map(p=>[p.date,Number(p.close)]));const dates=[...map.keys()].sort();if(dates.length>=5){row.result=(map.get(dates[4])/row.price-1)*100;row.end=dates[4];}}
+ writeArray('marceloPublicPicks92',rows.slice(0,120));
+}
+function renderResearch(stocks){
+ $('homeFeedStatus').textContent=marketStatus;
+ $('homeRetryAccount').hidden=!accountError||!activeUser||accountLoading;
+ const rows=publicPicks(),day=feedDay(market.updated_at),row=rows.find(x=>x.day===day),stock=row&&stocks.find(x=>x.ticker===row.ticker);
+ $('dailyPick').innerHTML=(!freshFeed(market.updated_at)||marketStatus.startsWith('Market data unavailable'))?'<p class="muted">Price data is outdated. The daily pick requires a newly published market feed; Refresh markets only reloads the same file.</p>':!stock?'<p class="muted">No qualifying stock meets the research thresholds for the latest available market session. No pick is forced.</p>':`<h2>${esc(stock.ticker)} <span class="muted">${esc(stock.name||'')}</span></h2><div class="muted">Feed date ${esc(day)} · recorded reference ${money(row.price)}</div><div class="research-metrics"><div>Research score<strong>${Number(row.score)}/100</strong></div><div>20-session change<strong>${pct(stock._research.m20)}</strong></div><div>Daily volatility<strong>${stock._research.risk==null?"—":stock._research.risk.toFixed(2)+"%"}</strong></div></div><p>Risk: ${esc(stock._research.riskLabel)}. Positive 20- and 60-session momentum, liquidity and price stability drive selection. No price cap.</p><button class="btn primary" type="button" id="dailyPickOpen">View stock research</button><p class="muted">Technical research only; not a buy recommendation or a forecast of business growth.</p>`;
+ if($('dailyPickOpen'))$('dailyPickOpen').addEventListener('click',()=>openStock(stock.ticker));
+ const done=rows.filter(x=>Number.isFinite(x.result));const avg=done.length?done.reduce((sum,x)=>sum+x.result,0)/done.length:null;
+ $('pickHistory').innerHTML=(done.length?`<p>${done.length} completed · Average ${pct(avg)} · Positive ${done.filter(x=>x.result>0).length}/${done.length}</p>`:'<p class="muted">No completed picks yet.</p>')+rows.slice(0,20).map(x=>`<div class="research-row"><span><strong>${esc(x.ticker)}</strong><br><span class="muted">${esc(x.day)}</span></span><span>${money(x.price)}</span><span class="${Number.isFinite(x.result)?x.result>=0?'up':'down':''}">${Number.isFinite(x.result)?pct(x.result):'Pending'}</span></div>`).join('');
+ $('opportunityStatus').textContent=stock&&freshFeed(market.updated_at)?`Research signal: ${stock.ticker} · ${row.score}/100. Alerts check every 15 minutes while the app is open.`:'Opportunity alerts check fresh market data while the app is open.';
+}
+async function notifyOpportunity(){
+ if(!('Notification' in window)||Notification.permission!=='granted'||!marketStatus.startsWith('Feed updated ')||!freshFeed(market.updated_at))return;
+ const row=publicPicks().find(x=>x.day===feedDay(market.updated_at));if(!row||row.day!==feedDay(new Date().toISOString())||row.score<70)return;const key=row.day+':'+row.ticker;
+ if(readArray('marceloNotifiedPicks92').includes(key))return;
+ try{const options={body:`Research score ${row.score}/100. Review the risks; not a buy instruction.`,icon:'icon-192.png',tag:'research-'+key};const registration=await navigator.serviceWorker?.getRegistration();if(registration?.active)await registration.showNotification('Marcelo Markets: '+row.ticker,options);else new Notification('Marcelo Markets: '+row.ticker,options);writeArray('marceloNotifiedPicks92',[key,...readArray('marceloNotifiedPicks92')].slice(0,120));}catch{/* in-app signal remains visible */}
+}
+async function fetchFeed(url){const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),12000);try{const r=await fetch(url,{cache:'no-store',signal:ctrl.signal,redirect:'error',credentials:'same-origin'});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(timer);}}
+function deadline(promise,ms=12000){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Connection timed out. Please retry.')),ms);})]).finally(()=>clearTimeout(timer));}
+
 let quickMode='all';
 let searchTimer=null;
 let chartShowPrice=true;
@@ -1117,7 +1177,7 @@ async function toggleWatch(ticker){
 }
 
 function switchView(view){
-  ["home","stocks","offers","watchlist"].forEach(v=>{
+  ["home","stocks","offers","watchlist","picks"].forEach(v=>{
     $(v+"View").hidden=v!==view;
   });
   document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
@@ -1126,6 +1186,7 @@ function switchView(view){
   if(view==="stocks") renderStocks();
   if(view==="offers") renderOffers();
   if(view==="watchlist") renderWatchlist();
+  if(view==="picks") renderResearch(decoratedStocks.length?decoratedStocks:decorateStocks(market.stocks||[]));
   if(view==="home") renderHome();
 }
 
@@ -1137,9 +1198,7 @@ async function refreshOffers(){
   const url=safeFeedUrl(safeStore.getItem("v5OfferFeed"),"./offers.json");
   $("offerStatus").textContent="Refreshing offers…";
   try{
-    const r=await fetch(url,{cache:"no-store"});
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data=await r.json();
+    const data=await fetchFeed(url);
     if(!Array.isArray(data)) throw new Error("Offer feed is not an array");
     offers=data;
     $("offerStatus").textContent=`Updated ${new Date().toLocaleString()}`;
@@ -1150,28 +1209,24 @@ async function refreshOffers(){
   }
 }
 
-async function refreshStocks(){
-  const url=safeFeedUrl(safeStore.getItem("v5MarketFeed"),"./market_data.json");
-  $("stockStatus").textContent="Refreshing stock prices…";
-  try{
-    const r=await fetch(url,{cache:"no-store"});
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data=await r.json();
-    if(!Array.isArray(data.stocks)) throw new Error("Price feed is invalid");
-    market=data;
-    decoratedStocks=decorateStocks(data.stocks);
-    $("stockStatus").textContent=data.updated_at
-      ? `Price feed updated ${new Date(data.updated_at).toLocaleString()}`
-      : "Price feed loaded";
-    fillSectors(); renderStocks(); renderHome(); renderWatchlist();
-  }catch(e){
-    $("stockStatus").textContent=`Price refresh failed: ${e.message}`;
-  }
+function refreshStocks(){
+ if(stockRequest)return stockRequest;
+ stockRequest=(async()=>{
+ const url=safeFeedUrl(safeStore.getItem('v5MarketFeed'),'./market_data.json');
+ marketStatus='Refreshing market prices…';$('stockStatus').textContent=marketStatus;$('homeFeedStatus').textContent=marketStatus;
+ try{
+  const data=await fetchFeed(url);if(!data||!Array.isArray(data.stocks))throw new Error('Price feed is invalid');
+  const stocks=data.stocks.filter(x=>x&&/^[A-Z0-9.^-]{1,12}$/.test(String(x.ticker))&&Number.isFinite(Number(x.price))&&Number(x.price)>0).map(x=>({...x,history:validHistory(x),news:Array.isArray(x.news)?x.news.filter(Boolean):[]}));
+  market={...data,stocks};decoratedStocks=decorateStocks(stocks);
+  marketStatus=(freshFeed(data.updated_at)?'Dated market snapshot · ':'OUTDATED market snapshot (not live) · ')+(data.updated_at?humanDate(data.updated_at):'no timestamp');$('stockStatus').textContent=marketStatus;
+  updatePublicPicks(decoratedStocks);fillSectors();renderHome();renderStocks();renderWatchlist();void notifyOpportunity();
+ }catch(e){marketStatus='Market data unavailable — '+(e.name==='AbortError'?'request timed out':e.message)+'. '+(decoratedStocks.length?'Showing last loaded prices.':'Use Refresh markets to retry.');$('stockStatus').textContent=marketStatus;renderHome();}
+ })().finally(()=>{stockRequest=null;});return stockRequest;
 }
 
 function notifyNewOffers(){
   if(!("Notification" in window) || Notification.permission!=="granted") return;
-  const notified=new Set(JSON.parse(safeStore.getItem("v5NotifiedOffers")||"[]"));
+  const notified=new Set(readArray("v5NotifiedOffers"));
   const fresh=offers.filter(o=>o["New"] && o.id && !notified.has(o.id));
   fresh.slice(0,4).forEach(o=>{
     try{
@@ -1189,12 +1244,14 @@ $("notifyBtn").addEventListener("click",async()=>{
   if(!("Notification" in window)){ alert("Browser notifications are not supported here."); return; }
   const permission=await Notification.requestPermission();
   $("notifyBtn").textContent=permission==="granted"?"🔔 Alerts enabled":"🔕 Alerts blocked";
-  if(permission==="granted") notifyNewOffers();
+  if(permission==="granted"){notifyNewOffers();void notifyOpportunity();}
 });
 
 
 function openStock(ticker){
   selectedTicker=ticker;
+  $("stockSearch").value="";$("maxPrice").value="Infinity";$("sectorFilter").value="all";$("volumeFilter").value="0";quickMode="all";
+  document.querySelectorAll("[data-quick]").forEach(b=>b.classList.toggle("active",b.dataset.quick==="all"));
   switchView("stocks");
   renderStocks();
   requestAnimationFrame(()=>{
@@ -1294,6 +1351,9 @@ function drawPortfolioChart(series){
 }
 
 function renderPaperPortfolio(stocks){
+  const c0=$("portfolioChart");
+  if(accountLoading || accountError || !activeUser){c0.getContext("2d")?.clearRect(0,0,c0.width,c0.height);}
+  if(accountError && activeUser){$("paperPortfolioValue").textContent="Account data unavailable";$("paperPortfolioDay").textContent="Use Retry account data below.";$("paperPortfolioGain").textContent="";$("portfolioEmpty").hidden=true;return;}
   if(accountLoading && activeUser){
     $("paperPortfolioValue").textContent="Loading…";
     $("paperPortfolioDay").textContent="Loading your private account data…";
@@ -1309,6 +1369,7 @@ function renderPaperPortfolio(stocks){
     const c=$("portfolioChart"),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);return;
   }
   const active=stocks.map(s=>({s,p:positionFor(s.ticker)})).filter(x=>x.p);
+  if(Object.keys(paperPositions).length>active.length){$("paperPortfolioValue").textContent="Prices incomplete";$("paperPortfolioDay").textContent="Some of your positions lack market data. Refresh markets to retry.";$("paperPortfolioGain").textContent="";$("portfolioEmpty").hidden=true;c0.getContext("2d")?.clearRect(0,0,c0.width,c0.height);return;}
   const value=active.reduce((sum,{s,p})=>sum+p.shares*Number(s.price||0),0);
   const prev=active.reduce((sum,{s,p})=>sum+p.shares*Number(s.previous_close||s.price||0),0);
   const cost=active.reduce((sum,{p})=>sum+p.shares*Number(p.avgCost||0),0);
@@ -1367,12 +1428,15 @@ function renderHome(){
   $("homeUnder20").textContent=stocks.filter(s=>Number(s.price)<=20).length;
   $("homeOffers").textContent=offers.length;
   $("homeNew").textContent=offers.filter(o=>o["New"]).length;
+  renderResearch(stocks);
+  const feedLabel=market.updated_at?humanDate(market.updated_at):'unknown date';
+  $("moversFeedStatus").textContent=freshFeed(market.updated_at)?`Prices from ${feedLabel} (not real-time)`:`OUTDATED prices from ${feedLabel} — not current quotes`;
   renderPaperPortfolio(stocks);
   renderMoverStrip(stocks);
   renderHomeWatchlist(stocks);
 
   const candidates=[...stocks]
-    .filter(s=>Number(s.price)>0 && Number(s.price)<=50)
+    .filter(s=>Number(s.price)>0 && s._research.eligible)
     .sort((a,b)=>b._score-a._score)
     .slice(0,6);
 
@@ -1510,18 +1574,18 @@ function drawSelected(){
   const pred=s._outlook||serverOutlook(s);
   $("predictionBox").hidden=false;
   const current=Number(s.price)||0;
-  const lowPrice=Number.isFinite(pred.lowPct) ? current*(1+pred.lowPct/100) : null;
-  const highPrice=Number.isFinite(pred.highPct) ? current*(1+pred.highPct/100) : null;
-  const expected=Number.isFinite(pred.expectedReturn) ? pct(pred.expectedReturn) : "—";
+  const lowPrice=Number.isFinite(pred.lowPct) ? Math.max(0,current*(1+pred.lowPct/100)) : Number.isFinite(pred.low)&&pred.strength>0?pred.low:null;
+  const highPrice=Number.isFinite(pred.highPct) ? current*(1+pred.highPct/100) : Number.isFinite(pred.high)&&pred.strength>0?pred.high:null;
+  const expected=Number.isFinite(pred.expectedReturn) ? pct(pred.expectedReturn) : pred.strength>0&&Number.isFinite(pred.projected)&&current>0?pct((pred.projected/current-1)*100):"—";
   const upRate=Number.isFinite(pred.upRate) ? `${pred.upRate.toFixed(1)}%` : "—";
   const rangeText=(lowPrice && highPrice) ? `${money(lowPrice)} – ${money(highPrice)}` : "—";
   $("predictionBox").innerHTML=`
     <div><div class="pred-label">5-day historical outlook</div><div class="pred-main ${esc(pred.key)}">${esc(pred.label)}</div><div class="model-badge">${esc(pred.model||"Historical model")}</div></div>
     <div><div class="pred-label">Analog up-rate</div><div class="pred-main">${upRate}</div></div>
     <div><div class="pred-label">Expected 5-day move</div><div class="pred-main">${expected}</div></div>
-    <div><div class="pred-label">Historical analog range</div><div class="pred-main">${rangeText}</div></div>
+    <div><div class="pred-label">Illustrative 5-day range</div><div class="pred-main">${rangeText}</div></div>
     <div class="prediction-reasons">${(pred.reasons||[]).map(r=>`<span class="pill">${esc(r)}</span>`).join("")}</div>
-    <div class="prediction-note">Based on ${pred.analogs||0} similar historical setups from this stock. Historical patterns can fail, especially around news and earnings.</div>`;
+    <div class="prediction-note">${pred.analogs>=10?`Based on ${pred.analogs} similar historical setups.`:"Trend extrapolation, not a probability model."} Risk: ${esc(s._research.riskLabel)}. No calibrated probability or guaranteed range. Historical patterns can fail around news and earnings.</div>`;
 
   const full=(s.history||[]).filter(p=>Number.isFinite(Number(p.close)));
   const hist=full.slice(-Math.min(chartRange,full.length));
@@ -1619,8 +1683,8 @@ function drawSelected(){
   $("stockDetails").innerHTML=`
     <div class="mini"><div class="k">Daily volume</div><div class="v">${compact(s.volume)}</div></div>
     <div class="mini"><div class="k">20-day avg volume</div><div class="v">${compact(s.avg_volume_20d)}</div></div>
-    <div class="mini"><div class="k">52-week range</div><div class="v">${low52?money(low52):"—"} – ${high52?money(high52):"—"}</div></div>
-    <div class="mini"><div class="k">Analog confidence</div><div class="v">${pred.confidence||pred.strength||0}/100</div></div>`;
+    <div class="mini"><div class="k">Available history range</div><div class="v">${low52?money(low52):"—"} – ${high52?money(high52):"—"}</div></div>
+    <div class="mini"><div class="k">Model signal strength</div><div class="v">${Number(pred.confidence||pred.strength||0)}/100</div></div>`;
 
   const news=Array.isArray(s.news)?s.news.slice(0,5):[];
   $("stockNews").innerHTML=news.length?news.map(n=>`
@@ -1713,7 +1777,7 @@ $("priceChart").addEventListener("mouseleave",()=>{$("chartTooltip").hidden=true
 document.querySelectorAll("[data-quick]").forEach(b=>b.addEventListener("click",()=>{
   quickMode=b.dataset.quick;
   document.querySelectorAll("[data-quick]").forEach(x=>x.classList.toggle("active",x===b));
-  if(quickMode==="all"){ $("maxPrice").value="999999"; $("volumeFilter").value="0"; }
+  if(quickMode==="all"){ $("maxPrice").value="Infinity"; $("volumeFilter").value="0"; }
   if(quickMode==="under10") $("maxPrice").value="10";
   if(quickMode==="active") $("stockSort").value="volume";
   if(quickMode==="bullish") $("stockSort").value="outlook";
@@ -1825,7 +1889,7 @@ function showAuthMessage(message,error=false){
   $("authMessage").classList.toggle("error",error);
 }
 function showAccountError(error){
-  const message=error?.message||"Could not save personal data. Check your connection and database setup.";
+  const message="Account action failed. Check your connection and try again.";
   console.error("Marcelo account action:",error?.name||"Request failed");
   showAuthMessage(message,true);
   if(!$("authDialog").open) $("authDialog").showModal();
@@ -1838,7 +1902,7 @@ function openAuthDialog(){
 }
 function requireAccount(){
   if(!db){openAuthDialog();showAuthMessage("Account setup is required before personal data can be saved.",true);return false;}
-  if(!activeUser || accountLoading){openAuthDialog();showAuthMessage("Please sign in and wait for your account to finish loading.",true);return false;}
+  if(!activeUser || accountLoading || accountError){openAuthDialog();showAuthMessage(accountError?"Account data unavailable. Close this dialog and use Retry account data on Daily Picks.":"Please sign in and wait for your account to finish loading.",true);return false;}
   return true;
 }
 function refreshPersonalUI(){
@@ -1868,13 +1932,13 @@ function resetAccountData(){
   refreshPersonalUI();
 }
 async function loadOwnData(userId,epoch){
-  accountLoading=true;
+  accountLoading=true;accountError=false;
   try{
-    const [w,p,s]=await Promise.all([
+    const [w,p,s]=await deadline(Promise.all([
       db.from("watchlists").select("ticker").eq("user_id",userId),
       db.from("portfolio_positions").select("ticker,shares,avg_cost").eq("user_id",userId),
       db.from("saved_predictions").select("ticker,snapshot,saved_at").eq("user_id",userId)
-    ]);
+    ]));
     if(w.error || p.error || s.error) throw w.error||p.error||s.error;
     if(epoch!==authEpoch || activeUser?.id!==userId) return;
     watchlist=new Set((w.data||[]).map(x=>x.ticker));
@@ -1882,9 +1946,14 @@ async function loadOwnData(userId,epoch){
     savedPredictions=Object.fromEntries((s.data||[]).map(x=>[x.ticker,{snapshot:x.snapshot,saved_at:x.saved_at}]));
     refreshPersonalUI();
   }catch(err){
-    if(epoch===authEpoch){resetAccountData();showAccountError(err);}
+    if(epoch===authEpoch){accountError=true;resetAccountData();console.warn("Account data unavailable",err?.name||"Error");}
   }finally{
-    if(epoch===authEpoch) accountLoading=false;
+    // Redraw after clearing the loader. Without this, Home remains on
+    // "Loading..." until a tab switch forces renderHome() to run again.
+    if(epoch===authEpoch){
+      accountLoading=false;
+      refreshPersonalUI();
+    }
   }
 }
 async function applyAuthUser(user){
@@ -1895,7 +1964,7 @@ async function applyAuthUser(user){
   }
   const epoch=++authEpoch;
   activeUser=user||null;
-  accountLoading=!!user;
+  accountLoading=!!user;accountError=false;
   resetAccountData(); // Clear the old account's data *before* any new user data loads.
   updateAuthUI();
   if(user) await loadOwnData(user.id,epoch);
@@ -2076,10 +2145,15 @@ async function initAccounts(){
 }
 
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
-  navigator.serviceWorker.register("./service-worker.js?v=9.1", {updateViaCache:"none"}).catch(()=>{});
+  navigator.serviceWorker.register("./service-worker.js?v=9.2", {updateViaCache:"none"}).catch(()=>{});
 }
 
-Promise.allSettled([refreshOffers(),refreshStocks()]).then(renderHome);
+$('homeRefresh').addEventListener('click',refreshStocks);
+$('homeRetryAccount').addEventListener('click',()=>{if(activeUser&&!accountLoading){const epoch=++authEpoch;accountError=false;accountLoading=true;renderHome();void loadOwnData(activeUser.id,epoch);}});
+renderHome();
+void refreshOffers();void refreshStocks();
+setInterval(()=>{if(!document.hidden)void refreshStocks();},15*60*1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)void refreshStocks();});
 initAccounts().catch(showAccountError);
 </script>
 </body>
